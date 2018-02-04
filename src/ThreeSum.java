@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.In;
 import org.jetbrains.annotations.Contract;
 
 public class ThreeSum {
