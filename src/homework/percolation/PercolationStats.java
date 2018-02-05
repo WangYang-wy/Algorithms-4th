@@ -13,6 +13,8 @@ public class PercolationStats {
 
     private int dimension;
 
+    private final double BOUND = 1.96;
+
     private double[] threshold = null;
 
 //    private Percolation percolation = null;
@@ -80,7 +82,7 @@ public class PercolationStats {
      * @return
      */
     public double confidenceLo() {
-        return this.mean() - this.stddev() * 1.96 / Math.sqrt(this.dimension);
+        return this.mean() - this.stddev() * this.BOUND / Math.sqrt(this.dimension);
     }
 
     /**
@@ -89,7 +91,7 @@ public class PercolationStats {
      * @return
      */
     public double confidenceHi() {
-        return this.mean() + this.stddev() * 1.96 / Math.sqrt(this.dimension);
+        return this.mean() + this.stddev() * this.BOUND / Math.sqrt(this.dimension);
     }
 
     /**

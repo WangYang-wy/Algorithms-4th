@@ -30,8 +30,11 @@ public class Percolation {
         }
 
         this.dimension = n;
+
         this.grid = new boolean[n * n];
+
         weightedQuickUnionUF = new WeightedQuickUnionUF(n * n + 2);
+
         for (int i = 0; i < this.grid.length; i++) {
             grid[i] = BLOCKED;
         }
@@ -46,8 +49,10 @@ public class Percolation {
     public void open(int row, int col) {
         if (outOfIndices(row, col))
             throw new IllegalArgumentException("outOfIndices......");
-        if (isOpen(row, col))
+        if (isOpen(row, col)) {
             return;
+        }
+
         if (row == 1) {//top sites
             weightedQuickUnionUF.union(0, (row - 1) * this.dimension + col);
             grid[(row - 1) * this.dimension + col - 1] = true;
