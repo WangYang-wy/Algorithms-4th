@@ -6,7 +6,7 @@
 Algorithms-4th.iml
 
 # Compiled class file
-*.class
+**/*.class
 
 # Log file
 *.log
@@ -32,3 +32,9 @@ hs_err_pid*
 
 # data
 /algs4-data
+
+# png
+**/*.png
+
+# txt
+**/*.txt

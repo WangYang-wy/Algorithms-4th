@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import java.util.Arrays;
 
 public class Point2D {
+
     private final double x;
     private final double y;
 
@@ -18,6 +19,14 @@ public class Point2D {
         this.y = y;
     }
 
+    /**
+     * ccw.
+     *
+     * @param a Point2D a.
+     * @param b Point2D b.
+     * @param c Point2D c.
+     * @return
+     */
     @Contract(pure = true)
     public static int ccw(Point2D a, Point2D b, Point2D c) {
         double area_2 = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
@@ -31,6 +40,10 @@ public class Point2D {
         }
     }
 
+    /**
+     * main test.
+     * @param args arguments.
+     */
     public static void main(String[] args) {
         Stack<Point2D> hull = new Stack<Point2D>();
 
