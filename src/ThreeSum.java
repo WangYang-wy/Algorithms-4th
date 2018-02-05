@@ -1,9 +1,10 @@
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
 import org.jetbrains.annotations.Contract;
 
 public class ThreeSum {
     /**
-     *
      * @param a
      * @return
      */
@@ -25,6 +26,9 @@ public class ThreeSum {
 
     public static void main(String[] args) {
         int[] a = In.readInts(args[0]);
-        System.out.println(count(a));
+        Stopwatch stopwatch = new Stopwatch();
+        StdOut.println(count(a));
+        double time = stopwatch.elapsedTime();
+        StdOut.println(time);
     }
 }

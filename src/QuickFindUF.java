@@ -32,7 +32,14 @@ public class QuickFindUF {
      * @param p
      */
     public void union(int q, int p) {
+        int pid = this.id[p];
+        int qid = this.id[q];
 
+        for (int i = 0; i < this.id.length; i++) {
+            if (id[i] == pid) {
+                id[i] = qid;
+            }
+        }
     }
 
 }
