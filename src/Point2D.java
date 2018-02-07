@@ -25,7 +25,7 @@ public class Point2D {
      * @param a Point2D a.
      * @param b Point2D b.
      * @param c Point2D c.
-     * @return
+     * @return angle < 90 ?.
      */
     @Contract(pure = true)
     public static int ccw(Point2D a, Point2D b, Point2D c) {
