@@ -11,7 +11,7 @@
  *
  ******************************************************************************/
 
-package homework.percolation;
+package homework.part1.percolation;
 
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
@@ -56,7 +56,6 @@ public class InteractivePercolationVisualizer {
                 PercolationVisualizer.draw(perc, n);
                 StdDraw.show();
             }
-
             StdDraw.pause(20);
         }
     }

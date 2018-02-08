@@ -1,148 +1,101 @@
-package homework.percolation;
+package homework.part1.percolation;
 
 /**
  * http://coursera.cs.princeton.edu/algs4/assignments/percolation.html
  */
 
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
+    // create n-by-n grid, with all sites blocked
+    private boolean[][] table;
+    private final int nVal;
+    private int openSites;
+    private final WeightedQuickUnionUF uf;
+    private final WeightedQuickUnionUF uf1;
 
-    private WeightedQuickUnionUF weightedQuickUnionUF;
-
-    private boolean[] grid;
-
-    private int dimension;
-
-    private static boolean OPEN = true;
-    private static boolean BLOCKED = false;
-
-    /**
-     * create n-by-n grid, with all sites blocked
-     *
-     * @param n dimension.
-     */
     public Percolation(int n) {
-        if (n <= 0) {
+        if (n <= 0)
             throw new IllegalArgumentException();
+        nVal = n;
+        openSites = 0;
+        table = new boolean[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                table[i][j] = false;
         }
-
-        this.dimension = n;
-
-        this.grid = new boolean[n * n];
-
-        weightedQuickUnionUF = new WeightedQuickUnionUF(n * n + 2);
-
-        for (int i = 0; i < this.grid.length; i++) {
-            grid[i] = BLOCKED;
-        }
+        uf = new WeightedQuickUnionUF(n * n + 2);
+        uf1 = new WeightedQuickUnionUF(n * n + 2);
     }
 
-    /**
-     * open site (row, col) if it is not open already
-     *
-     * @param row row.
-     * @param col col.
-     */
+    // open site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (outOfIndices(row, col))
-            throw new IllegalArgumentException("outOfIndices......");
-        if (isOpen(row, col)) {
-            return;
-        }
-
-        if (row == 1) {//top sites
-            weightedQuickUnionUF.union(0, (row - 1) * this.dimension + col);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        } else if (row == this.dimension) {
-            weightedQuickUnionUF.union(this.dimension * this.dimension + 1, (row - 1) * this.dimension + col);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-        if (!outOfIndices(row - 1, col) && isOpen(row - 1, col)) {//上site
-            weightedQuickUnionUF.union((row - 1) * this.dimension + col, (row - 2) * this.dimension + col);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-        if (!outOfIndices(row + 1, col) && isOpen(row + 1, col)) {//下site
-            weightedQuickUnionUF.union(row * this.dimension + col, (row - 1) * this.dimension + col);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-        if (!outOfIndices(row, col - 1) && isOpen(row, col - 1)) {//左site
-            weightedQuickUnionUF.union((row - 1) * this.dimension + col - 1, (row - 1) * this.dimension + col);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-        if (!outOfIndices(row, col + 1) && isOpen(row, col + 1)) {//右site
-            weightedQuickUnionUF.union((row - 1) * this.dimension + col, (row - 1) * this.dimension + col + 1);
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-        if (!outOfIndices(row, col + 1)) {
-            grid[(row - 1) * this.dimension + col - 1] = true;
-        }
-//        numberopen++;
-    }
-
-    /**
-     * is site (row, col) open?
-     *
-     * @param row row.
-     * @param col col.
-     * @return open or not.
-     */
-    public boolean isOpen(int row, int col) {
-        if (row < 1 || row > this.dimension || col < 1 || col > this.dimension) {
-            throw new IllegalArgumentException();
-        }
-
-        return OPEN == this.grid[(row - 1) * this.dimension + (col - 1)];
-    }
-
-    /**
-     * is site (row, col) full?
-     *
-     * @param row row.
-     * @param col col.
-     * @return is site (row, col) full?
-     */
-    public boolean isFull(int row, int col) {
-        return weightedQuickUnionUF.connected((row - 1) * this.dimension + col, 0);
-    }
-
-    public boolean outOfIndices(int row, int col) {
-        if ((row > 0 && row <= this.dimension) && (col > 0 && col <= this.dimension))
-            return false;
-        return true;
-    }
-
-    /**
-     * number of open sites
-     *
-     * @return number of open sites.
-     */
-    public int numberOfOpenSites() {
-        int count = 0;
-        for (int i = 0; i < this.dimension; i++) {
-            if (OPEN == this.grid[i]) {
-                count++;
+        validIndices(row, col);
+        if (!table[row - 1][col - 1]) {
+            table[row - 1][col - 1] = true;
+            openSites++;
+            int pos = map2Dto1D(row, col);
+            if (row == 1) {
+                uf.union(pos, 0);
+                uf1.union(pos, 0);
             }
+
+            if (row > 1 && table[row - 2][col - 1]) {
+                uf.union(pos, pos - nVal);
+                uf1.union(pos, pos - nVal);
+            }
+
+            if (row < nVal && table[row][col - 1]) {
+                uf.union(pos, pos + nVal);
+                uf1.union(pos, pos + nVal);
+            }
+
+            if (col > 1 && table[row - 1][col - 2]) {
+                uf.union(pos, pos - 1);
+                uf1.union(pos, pos - 1);
+            }
+
+            if (col < nVal && table[row - 1][col]) {
+                uf.union(pos, pos + 1);
+                uf1.union(pos, pos + 1);
+            }
+
+            if (row == nVal)
+                uf.union(pos, nVal * nVal + 1);
         }
-        return count;
     }
 
-    /**
-     * does the system percolate?
-     *
-     * @return does the system percolate?
-     */
+    // is site (row, col) open?
+    public boolean isOpen(int row, int col) {
+        validIndices(row, col);
+        return table[row - 1][col - 1];
+    }
+
+    // is site (row, col) full?
+    public boolean isFull(int row, int col) {
+        validIndices(row, col);
+//        if (!table[row][col])
+//            return false;
+        int pos = map2Dto1D(row, col);
+        return uf1.connected(pos, 0);
+    }
+
+    // number of open sites
+    public int numberOfOpenSites() {
+        return openSites;
+    }
+
+    // does the system percolate?
     public boolean percolates() {
-        return weightedQuickUnionUF.connected(0, this.dimension * this.dimension + 1);
+        return uf.connected(0, nVal * nVal + 1);
     }
 
-    /**
-     * test client (optional)
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
+    private void validIndices(int row, int col) {
+        if (row < 1 || row > nVal || col < 1 || col > nVal)
+            throw new IllegalArgumentException();
+    }
+
+    private int map2Dto1D(int row, int col) {
+        return (row - 1) * nVal + col;
     }
 }

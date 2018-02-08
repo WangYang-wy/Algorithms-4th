@@ -16,7 +16,7 @@
  *
  ******************************************************************************/
 
-package homework.percolation;
+package homework.part1.percolation;
 
 import java.awt.Font;
 

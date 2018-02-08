@@ -28,6 +28,7 @@ Algorithms-4th.iml
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# MacOS
 **/.DS_Store
 
 # data
@@ -38,3 +39,6 @@ hs_err_pid*
 
 # txt
 **/*.txt
+
+# vscode
+**/.vscode
