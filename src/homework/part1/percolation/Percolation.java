@@ -5,6 +5,7 @@ package homework.part1.percolation;
  */
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import org.jetbrains.annotations.Contract;
 
 public class Percolation {
     // create n-by-n grid, with all sites blocked
@@ -95,6 +96,7 @@ public class Percolation {
             throw new IllegalArgumentException();
     }
 
+    @Contract(pure = true)
     private int map2Dto1D(int row, int col) {
         return (row - 1) * nVal + col;
     }
